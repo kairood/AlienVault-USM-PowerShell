@@ -17,7 +17,7 @@ $tokenheaders.Add("Authorization", "Bearer $apitoken")
 
 Write-Output "Gathering Alarm Data... `n"
 
-# Get Filtered Alarms where status is open and Strategy is Credential Abuse
+# Get Filtered Alarms with limited status and size
 $GetAlarms = Invoke-RestMethod "https://$Tenant.alienvault.cloud/api/2.0/alarms?status=$status&size=$size" -SessionVariable 'Session'  -ContentType 'application/json' -Headers $tokenheaders -Method Get
 
 $global:Alarms = $GetAlarms._embedded 
