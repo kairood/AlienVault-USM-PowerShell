@@ -3,7 +3,7 @@ $global:Alarms = $null # Set Global Alarms variable to call on later after Funct
 
 Function Get-USMAlarms { 
 
-param([Parameter(Mandatory=$true)][String] $Tenant, [Parameter(ValueFromPipeline)] $apitoken, [Parameter(Mandatory=$true)][String] $status, [Parameter(Mandatory=$true)][String] $size)
+param([Parameter(Mandatory=$true)][String] $Tenant, [Parameter(ValueFromPipeline)] $apitoken, [Parameter(Mandatory=$true)][String] $status, [Parameter(Mandatory=$true)][int] $size, [Parameter(Mandatory=$true)][ValidateSet("asc","desc")] $sort)
 
 
 # Forcing TLS 1.2 API Connections
@@ -17,8 +17,8 @@ $tokenheaders.Add("Authorization", "Bearer $apitoken")
 
 Write-Output "Gathering Alarm Data... `n"
 
-# Get Filtered Alarms with limited status and size
-$GetAlarms = Invoke-RestMethod "https://$Tenant.alienvault.cloud/api/2.0/alarms?status=$status&size=$size" -SessionVariable 'Session'  -ContentType 'application/json' -Headers $tokenheaders -Method Get
+# Get Filtered Alarms where status is open and Strategy is Credential Abuse
+$GetAlarms = Invoke-RestMethod "https://$Tenant.alienvault.cloud/api/2.0/alarms?status=$status&size=$size&sort=$sort" -SessionVariable 'Session'  -ContentType 'application/json' -Headers $tokenheaders -Method Get
 
 $global:Alarms = $GetAlarms._embedded 
 }
